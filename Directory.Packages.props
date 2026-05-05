@@ -182,6 +182,7 @@
         <PackageVersion Include="Testcontainers.PostgreSql" Version="4.9.0"/>
         <PackageVersion Include="Testcontainers.RabbitMq" Version="4.9.0"/>
         <PackageVersion Include="Testcontainers.Redis" Version="4.9.0"/>
+        <PackageVersion Include="Testcontainers.Oracle" Version="4.9.0"/>
         <PackageVersion Include="ThrottleDebounce" Version="2.0.1"/>
         <PackageVersion Include="WebhooksCore" Version="0.0.1"/>
         <PackageVersion Include="xunit" Version="2.9.3"/>

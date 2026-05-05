@@ -126,7 +126,7 @@ public static class BulkUpsertExtensions
                     values.Add("CAST(NULL AS varbinary(max))"); // Explicitly cast null
                 else
                     values.Add(paramName);
-                
+
                 parameters.Add(value!);
             }
 
@@ -135,9 +135,9 @@ public static class BulkUpsertExtensions
         }
 
         mergeSql.AppendLine($") AS Source ({string.Join(", ", columnNames)})");
-        mergeSql.AppendLine($"ON Target.{keyColumnName} = Source.{keyColumnName}");
+        mergeSql.AppendLine($"ON Target.\"{keyColumnName}\" = Source.{keyColumnName}");
         mergeSql.AppendLine("WHEN MATCHED THEN");
-        mergeSql.AppendLine($"    UPDATE SET {string.Join(", ", columnNames.Where(c => c != keyColumnName).Select(c => $"Target.{c} = Source.{c}"))}");
+        mergeSql.AppendLine($"    UPDATE SET {string.Join(", ", columnNames.Where(c => c != keyColumnName).Select(c => $"Target.\"{c}\" = Source.\"{c}\""))}");
         mergeSql.AppendLine("WHEN NOT MATCHED THEN");
         mergeSql.AppendLine($"    INSERT ({string.Join(", ", columnNames)})");
         mergeSql.AppendLine($"    VALUES ({string.Join(", ", columnNames.Select(c => $"Source.{c}"))});");
@@ -254,7 +254,7 @@ public static class BulkUpsertExtensions
                     placeholders.Add($"CAST({paramName} AS json)");
                 else
                     placeholders.Add(paramName);
-                
+
                 parameters.Add(value!);
             }
 
@@ -347,7 +347,9 @@ public static class BulkUpsertExtensions
         var schema = entityType.GetSchema();
         var tableName = entityType.GetTableName();
         var storeObject = StoreObjectIdentifier.Table(tableName!, schema);
-        var fullName = !string.IsNullOrEmpty(schema) ? $"{schema}.{tableName}" : tableName;
+        var fullName = !string.IsNullOrEmpty(schema)
+            ? $"\"{schema}\".\"{tableName}\""
+            : $"\"{tableName}\"";
 
         var props = entityType.GetProperties().ToList();
 
@@ -386,7 +388,7 @@ public static class BulkUpsertExtensions
 
                 // Oracle aliases must match the column name
                 var alias = property.GetColumnName(storeObject);
-                lineParts.Add($"{paramName} AS {alias}");
+                lineParts.Add($"{paramName} AS \"{alias}\"");
             }
 
             // Comma if not last
@@ -394,17 +396,17 @@ public static class BulkUpsertExtensions
             sb.AppendLine(string.Join(", ", lineParts) + suffix);
         }
 
-        sb.AppendLine($") Source ON (Target.{keyColumnName} = Source.{keyColumnName})");
+        sb.AppendLine($") Source ON (Target.\"{keyColumnName}\" = Source.\"{keyColumnName}\")");
         sb.AppendLine("WHEN MATCHED THEN UPDATE SET");
 
         var updateSetClauses = columnNames
             .Where(c => c != keyColumnName)
-            .Select(c => $"Target.{c} = Source.{c}");
+            .Select(c => $"Target.\"{c}\" = Source.\"{c}\"");
 
         sb.AppendLine(string.Join(", ", updateSetClauses));
         sb.AppendLine("WHEN NOT MATCHED THEN");
-        sb.AppendLine($"INSERT ({string.Join(", ", columnNames)})");
-        sb.AppendLine($"VALUES ({string.Join(", ", columnNames.Select(c => $"Source.{c}"))});");
+        sb.AppendLine($"INSERT ({string.Join(", ", columnNames.Select(c => $"\"{c}\""))})");
+        sb.AppendLine($"VALUES ({string.Join(", ", columnNames.Select(c => $"Source.\"{c}\""))});");
 
         return (sb.ToString(), parameters.ToArray());
     }

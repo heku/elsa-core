@@ -25,29 +25,29 @@ namespace Elsa.Persistence.EFCore.Oracle.Migrations.Management
                 type: "NCLOB",
                 nullable: true);
 
-            migrationBuilder.AlterColumn<string>(
-                name: "StringData",
-                schema: _schema.Schema,
-                table: "WorkflowDefinitions",
-                type: "JSON",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "NCLOB",
-                oldNullable: true);
+            //migrationBuilder.AlterColumn<string>(
+            //    name: "StringData",
+            //    schema: _schema.Schema,
+            //    table: "WorkflowDefinitions",
+            //    type: "JSON",
+            //    nullable: true,
+            //    oldClrType: typeof(string),
+            //    oldType: "NCLOB",
+            //    oldNullable: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<string>(
-                name: "StringData",
-                schema: _schema.Schema,
-                table: "WorkflowDefinitions",
-                type: "NCLOB",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "JSON",
-                oldNullable: true);
+            //migrationBuilder.AlterColumn<string>(
+            //    name: "StringData",
+            //    schema: _schema.Schema,
+            //    table: "WorkflowDefinitions",
+            //    type: "NCLOB",
+            //    nullable: true,
+            //    oldClrType: typeof(string),
+            //    oldType: "JSON",
+            //    oldNullable: true);
 
             migrationBuilder.DropColumn(
                 name: "OriginalSource",

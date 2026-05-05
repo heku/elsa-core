@@ -10,6 +10,7 @@
         <PackageReference Include="Testcontainers.PostgreSql"/>
         <PackageReference Include="Testcontainers.RabbitMq"/>
         <PackageReference Include="Testcontainers.MsSql"/>
+        <PackageReference Include="Testcontainers.Oracle" />
     </ItemGroup>
 
 </Project>

@@ -73,7 +73,7 @@ namespace Elsa.Persistence.EFCore.Oracle.Migrations.Management
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("StringData")
-                        .HasColumnType("JSON");
+                        .HasColumnType("NCLOB");
 
                     b.Property<string>("TenantId")
                         .HasColumnType("NVARCHAR2(450)");

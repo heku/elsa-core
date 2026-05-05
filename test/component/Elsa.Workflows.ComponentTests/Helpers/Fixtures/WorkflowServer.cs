@@ -30,6 +30,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Refit;
 using static Elsa.Api.Client.RefitSettingsHelper;
+using System.Diagnostics;
 
 namespace Elsa.Workflows.ComponentTests.Fixtures;
 
@@ -62,7 +63,7 @@ public class WorkflowServer(Infrastructure infrastructure, string url) : WebAppl
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        var dbConnectionString = infrastructure.DbContainer.GetConnectionString();
+        var dbConnectionString = infrastructure.ElsaConnectionString;// infrastructure.DbContainer.GetConnectionString();
         var rabbitMqConnectionString = infrastructure.RabbitMqContainer.GetConnectionString();
 
         builder.UseUrls(url);
@@ -89,14 +90,18 @@ public class WorkflowServer(Infrastructure infrastructure, string url) : WebAppl
                 elsa.UseIdentity(identity => identity.UseEntityFrameworkCore(ef =>
                 {
                     //ef.UsePostgreSql(dbConnectionString);
-                    ef.UseSqlServer(dbConnectionString);
+                    //ef.UseSqlServer(dbConnectionString);
+                    ef.UseOracle(dbConnectionString);
+                    // ef.RunMigrations = true;
                 }));
                 elsa.UseWorkflowManagement(management =>
                 {
                     management.UseEntityFrameworkCore(ef =>
                     {
                         //ef.UsePostgreSql(dbConnectionString);
-                        ef.UseSqlServer(dbConnectionString);
+                        //ef.UseSqlServer(dbConnectionString);
+                        ef.UseOracle(dbConnectionString);
+                        // ef.RunMigrations = true;
                     });
                     management.UseCache();
                 });
@@ -105,7 +110,9 @@ public class WorkflowServer(Infrastructure infrastructure, string url) : WebAppl
                     runtime.UseEntityFrameworkCore(ef =>
                     {
                         //ef.UsePostgreSql(dbConnectionString);
-                        ef.UseSqlServer(dbConnectionString);
+                        //ef.UseSqlServer(dbConnectionString);
+                        ef.UseOracle(dbConnectionString);
+                        // ef.RunMigrations = true;
                     });
                     runtime.UseCache();
                     runtime.UseDistributedRuntime();
@@ -125,7 +132,9 @@ public class WorkflowServer(Infrastructure infrastructure, string url) : WebAppl
                     alterations.UseEntityFrameworkCore(ef =>
                     {
                         //ef.UsePostgreSql(dbConnectionString);
-                        ef.UseSqlServer(dbConnectionString);
+                        //ef.UseSqlServer(dbConnectionString);
+                        ef.UseOracle(dbConnectionString);
+                        // ef.RunMigrations = true;
                     });
                 });
                 elsa.UseHttp(http =>
